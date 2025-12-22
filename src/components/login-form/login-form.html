@@ -1,0 +1,8 @@
+<form class="logo-container" [formGroup]="loginForm" (ngSubmit)="auth()">
+  <img src="   https://cdn-icons-png.flaticon.com/512/145/145807.png " alt="login" class="logo" />
+  <div class="input-field">
+    <label>Логин: <input type="text" id="login" formControlName="login" /></label>
+    <label>Пароль: <input type="text" id="password" formControlName="password" /></label>
+  </div>
+  <button type="submit">Log IN</button>
+</form>
