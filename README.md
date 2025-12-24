@@ -1,59 +1,288 @@
-# Medicum
+# Форум — Техническое описание и требования
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.3.
+**Стек:** Angular (Angular Material) + Go  
+**Хранилища данных:** MongoDB, Redis
 
-## Development server
+---
 
-To start a local development server, run:
+## 1. Архитектура системы
 
-```bash
-ng serve
+### 1.1 Общее описание
+
+Система построена по **клиент–серверной архитектуре** с четким разделением ответственности:
+
+- **Frontend:** SPA на Angular с использованием Angular Material
+- **Backend:** REST API на Go
+- **База данных:** MongoDB (постоянное хранилище)
+- **Кэш / сессии:** Redis
+- **Аутентификация:** JWT
+- **Развертывание:** Docker + Nginx (reverse proxy)
+
+```
+[ Браузер ]
+|
+v
+[ Angular SPA ]
+|
+HTTPS (REST / JSON)
+|
+[ Go API Server ]
+| |
+| +--> [ Redis ]
+|
++--> [ MongoDB ]
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
+### 1.2 Архитектура Frontend (Angular)
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- **Фреймворк:** Angular (LTS)
+- **UI:** Angular Material
+- **Управление состоянием:** RxJS сервисы (NgRx — опционально)
+- **Маршрутизация:** Angular Router с lazy loading
+- **Аутентификация:** JWT (HttpOnly cookies или in-memory)
+- **API:** HttpClient + interceptors
 
-```bash
-ng generate component component-name
-```
+**Основные модули**
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+- CoreModule — глобальные сервисы, interceptors
+- SharedModule — общие компоненты Material
+- AuthModule — авторизация
+- ForumModule — форум
+- AdminModule — админка
 
-```bash
-ng generate --help
-```
+---
 
-## Building
+### 1.3 Архитектура Backend (Go)
 
-To build the project run:
+- **Стиль API:** REST (JSON)
+- **HTTP-фреймворк:** net/http / Gin / Fiber
+- **Аутентификация:** JWT (access + refresh)
+- **Валидация:** go-playground/validator
+- **Логирование:** zap / logrus
+- **Конфигурация:** переменные окружения
 
-```bash
-ng build
-```
+**Принципы**
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+- Clean Architecture
+- Разделение по доменам
+- Stateless-сервисы (Redis для состояния)
 
-## Running unit tests
+---
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+### 1.4 Архитектура данных
 
-```bash
-ng test
-```
+#### MongoDB (основные коллекции)
 
-## Running end-to-end tests
+- users
+- threads
+- posts
+- categories
+- votes
+- reports
 
-For end-to-end (e2e) testing, run:
+#### Redis
 
-```bash
-ng e2e
-```
+- Сессии пользователей
+- Rate limiting
+- Счетчики просмотров тем
+- Кэш популярных тем
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+---
 
-## Additional Resources
+## 2. Маршруты веб-страниц (Angular)
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+### 2.1 Публичные маршруты
+
+| Маршрут           | Описание                 |
+| ----------------- | ------------------------ |
+| `/`               | Главная / последние темы |
+| `/login`          | Вход                     |
+| `/register`       | Регистрация              |
+| `/categories`     | Список категорий         |
+| `/category/:slug` | Темы категории           |
+| `/thread/:id`     | Просмотр темы            |
+
+---
+
+### 2.2 Маршруты для авторизованных пользователей
+
+| Маршрут            | Описание                  |
+| ------------------ | ------------------------- |
+| `/profile`         | Профиль                   |
+| `/profile/edit`    | Редактирование профиля    |
+| `/thread/create`   | Создание темы             |
+| `/thread/:id/edit` | Редактирование своей темы |
+| `/notifications`   | Уведомления               |
+
+---
+
+### 2.3 Административные маршруты
+
+| Маршрут          | Описание                  |
+| ---------------- | ------------------------- |
+| `/admin`         | Дашборд                   |
+| `/admin/users`   | Управление пользователями |
+| `/admin/threads` | Модерация тем             |
+| `/admin/reports` | Жалобы                    |
+
+---
+
+### 2.4 Route Guards
+
+- `AuthGuard` — доступ только для авторизованных
+- `AdminGuard` — доступ для администраторов
+- `OwnerGuard` — проверка владельца ресурса
+
+---
+
+## 3. Структура Go-проекта и сервисы
+
+### 3.1 Структура каталогов
+
+/cmd
+/api
+main.go
+
+/internal
+/config
+config.go
+
+/server
+http.go
+router.go
+
+/auth
+handler.go
+service.go
+middleware.go
+jwt.go
+
+/user
+handler.go
+service.go
+repository.go
+model.go
+
+/forum
+/thread
+handler.go
+service.go
+repository.go
+model.go
+/post
+handler.go
+service.go
+repository.go
+model.go
+/category
+handler.go
+service.go
+repository.go
+model.go
+
+/admin
+handler.go
+service.go
+
+/common
+response.go
+errors.go
+middleware.go
+
+/pkg
+/db
+mongo.go
+redis.go
+
+/logger
+logger.go
+
+---
+
+### 3.2 Основные сервисы
+
+#### Auth Service
+
+- Регистрация и вход
+- Генерация и обновление JWT
+- Хеширование паролей (bcrypt / argon2)
+- RBAC (роли)
+
+#### User Service
+
+- Управление профилем
+- Репутация пользователя
+- Метаданные аккаунта
+
+#### Thread Service
+
+- CRUD операций с темами
+- Фильтрация и пагинация
+- Счетчики просмотров (Redis)
+
+#### Post Service
+
+- Ответы в темах
+- Markdown-разметка
+- Голосование
+
+#### Admin Service
+
+- Модерация контента
+- Блокировки пользователей
+- Работа с жалобами
+
+---
+
+### 3.3 Примеры API эндпоинтов
+
+POST /api/auth/login
+POST /api/auth/register
+GET /api/categories
+GET /api/threads?category=go&page=1
+POST /api/threads
+GET /api/threads/:id
+POST /api/posts
+DELETE /api/admin/threads/:id
+
+---
+
+## 4. Нефункциональные требования
+
+### Производительность
+
+- Кэширование через Redis
+- Индексы MongoDB (categoryId, authorId, createdAt)
+- Пагинация всех списков
+
+### Безопасность
+
+- Только HTTPS
+- Ограничение частоты запросов
+- Валидация входных данных
+- Ограничение прав доступа
+
+### Масштабируемость
+
+- Stateless Go-сервисы
+- Горизонтальное масштабирование
+- CDN для статики
+
+### Поддерживаемость
+
+- Модульная архитектура Angular
+- Четкие границы доменов в Go
+- Централизованное логирование
+
+---
+
+## 5. Возможные расширения
+
+- WebSocket для live-обновлений
+- Полнотекстовый поиск
+- Email-уведомления
+- Интеграция ElasticSearch
+
+
