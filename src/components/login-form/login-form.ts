@@ -16,10 +16,11 @@ export class LoginForm {
     password: new FormControl(''),
   });
   auth() {
-    const authResult = this.http.post('/auth', this.loginForm.value).subscribe((responce) => {
-      if (responce) alert('Welcome Home ');
-    });
-
-    console.warn(this.loginForm);
+    this.http
+      .post('http://localhost:8080/api/auth', this.loginForm.value)
+      .subscribe((responce: Partial<{ data: string }>) => {
+        const name = responce.data;
+        if (name) alert(`Welcome Home ${name}`);
+      });
   }
 }
