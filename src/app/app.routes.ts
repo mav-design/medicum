@@ -12,6 +12,16 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/categories-page/categories-page').then((m) => m.CategoriesPage),
       },
+      {
+        path: 'categories',
+        loadComponent: () =>
+          import('./pages/categories-page/categories-page').then((m) => m.CategoriesPage),
+      },
+      {
+        path: 'threads',
+        loadComponent: () =>
+          import('./pages/categories-page/categories-page').then((m) => m.CategoriesPage),
+      },
     ],
   },
 ];

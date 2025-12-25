@@ -1,5 +1,13 @@
 <header>
   <button matIconButton aria-label="sidebar" (click)="SidebarService.openSidebar()">
-    <mat-icon>home</mat-icon>
+    <mat-icon>account_circle</mat-icon>
   </button>
+  <span>ФОРУМ ЛЮБИТЕЛЕЙ ЩЕКОТАТЬ ОЧКО</span>
+  <nav mat-tab-nav-bar [tabPanel]="tabPanel">
+    @for (link of links; track link.href) {
+    <a mat-tab-link [routerLink]="link.href" routerLinkActive #rla="routerLinkActive" [active]="rla.isActive">
+      {{link.title}} </a>
+    }{{activeLink()}}
+  </nav>
+  <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
 </header>

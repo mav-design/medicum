@@ -7,16 +7,12 @@
 
 html {
   height: 100%;
-  @include mat.theme(
-    (
-      color: (
-        primary: mat.$azure-palette,
+  @include mat.theme((color: (primary: mat.$azure-palette,
         tertiary: mat.$blue-palette,
       ),
       typography: Roboto,
       density: 0,
-    )
-  );
+    ));
 }
 
 body {
@@ -36,10 +32,11 @@ body {
   margin: 0;
   height: 100%;
 }
+
 :root {
-  @include mat.icon-button-overrides(
-    (
-      touch-target-display: none,
-    )
-  );
+  @include mat.icon-button-overrides((touch-target-display: none,
+    ));
+  // @include mat.tabs-overrides((active-focus-indicator-color: orange,
+  //     active-focus-label-text-color: red,
+  //   ));
 }
