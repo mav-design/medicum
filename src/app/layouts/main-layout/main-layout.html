@@ -1,0 +1,13 @@
+<mat-sidenav-container class="example-container" (backdropClick)="sidenav.close()">
+  <mat-sidenav #sidenav (keydown.escape)="sidenav.close()" disableClose>
+    <button matIconButton (click)="sidenav.close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <app-header />
+
+    <router-outlet />
+  </mat-sidenav-content>
+</mat-sidenav-container>
