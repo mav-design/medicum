@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { LoginPage } from './pages/login-page/login-page';
 import { MainLayout } from './layouts/main-layout/main-layout';
 
 export const routes: Routes = [
@@ -8,19 +7,14 @@ export const routes: Routes = [
     component: MainLayout,
     children: [
       {
-        path: '',
-        loadComponent: () =>
-          import('./pages/categories-page/categories-page').then((m) => m.CategoriesPage),
-      },
-      {
         path: 'categories',
         loadComponent: () =>
-          import('./pages/categories-page/categories-page').then((m) => m.CategoriesPage),
+          import('../pages/categories-page/categories-page').then((m) => m.CategoriesPage),
       },
       {
         path: 'threads',
         loadComponent: () =>
-          import('./pages/categories-page/categories-page').then((m) => m.CategoriesPage),
+          import('../pages/threads-page/threads-page').then((m) => m.ThreadsPage),
       },
     ],
   },
