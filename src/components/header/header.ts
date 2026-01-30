@@ -1,3 +1,4 @@
+import { MatButtonModule } from '@angular/material/button';
 import { SidebarService } from './../../services/sidebar/sidebar-service';
 import { Component, computed, inject, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,7 +10,7 @@ type Link = {
 };
 @Component({
   selector: 'app-header',
-  imports: [MatIconModule, RouterLink, MatTabsModule, RouterLinkActive],
+  imports: [MatIconModule, RouterLink, MatTabsModule, RouterLinkActive, MatButtonModule],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
@@ -20,7 +21,7 @@ export class Header {
   activeLink = signal('');
 
   links: Link[] = [
-    { href: 'categories', title: 'Категории' },
+    { href: '', title: 'Категории' },
     { href: 'threads', title: 'Темы' },
   ];
 }
