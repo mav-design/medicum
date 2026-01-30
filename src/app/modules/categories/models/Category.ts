@@ -8,5 +8,5 @@ export interface Category {
   };
   creatorId: string;
   createdAt: Date;
-  updatedAt: Date | null;
+  updatedAt?: Date;
 }

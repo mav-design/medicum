@@ -1,0 +1,15 @@
+@if (category(); as cat) {
+<mat-card [routerLink]="['category',cat.id]">
+  <mat-card-header>
+    <mat-card-title>
+      <p>{{cat.name}}</p>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <p>{{ cat.description }} </p>
+  </mat-card-content>
+  <mat-card-actions align="end">
+    <p>{{categoryDate()| date:'short':'':'ru-RU'}}</p>
+  </mat-card-actions>
+</mat-card>
+}

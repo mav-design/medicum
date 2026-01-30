@@ -1,5 +1,5 @@
 <section>
   @for (category of categories(); track category.id) {
-
+  <app-category-card [category]="category" />
   }
 </section>
