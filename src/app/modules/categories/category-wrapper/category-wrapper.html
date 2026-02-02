@@ -1,5 +1,7 @@
-<section>
+<mat-grid-list cols="9" class="category-wrapper">
   @for (category of categories(); track category.id) {
-  <app-category-card [category]="category" />
+  <mat-grid-tile>
+    <app-category-card [category]="category" />
+  </mat-grid-tile>
   }
-</section>
+</mat-grid-list>

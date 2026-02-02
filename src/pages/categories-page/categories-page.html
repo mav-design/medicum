@@ -1,2 +1,5 @@
-<p>categories-page works! {{categories.length}}</p>
-<app-category-wrapper [categories]="categories" />
+<section class="expander">
+  @for (metaCategory of categories; track metaCategory.id) {
+  <app-category-expansion-list [metaCategory]="metaCategory" />
+  }
+</section>
